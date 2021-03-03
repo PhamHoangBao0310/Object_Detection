@@ -3,7 +3,7 @@ import cv2
 import xml.etree.ElementTree as ET
 import os
 import glob
-from utils import selective_search, compute_iou
+from utils import selective_search, compute_iou, get_area
 import cv2
 
 
@@ -97,6 +97,10 @@ def create_dataset():
         #   print("{} has IOI > 0".format(proposed_Rect))
         (gtStartX, gtStartY, gtEndX, gtEndY) = gt_box
 
+        proposed_Rect_Area = get_area([propStartX, propStartY, propEndX, propEndY])
+        gt_box_Area = get_area([gtStartX, gtStartY, gtEndX, gtEndY])
+
+
         roi = None
         output_path = None
 
@@ -106,6 +110,8 @@ def create_dataset():
           filename = "{}.png".format(total_Positive)
           output_path = os.path.sep.join([config.POSITVE_PATH, filename])
 
+          if gt_box_Area / proposed_Rect_Area < 0.7 or proposed_Rect_Area / gt_box_Area < 0.7:
+            continue
           # increment the positive counters
           positiveROIs += 1
           total_Positive += 1
@@ -150,5 +156,5 @@ if __name__ == '__main__':
   # cv2.imshow("racoon", img)
   # cv2.waitKey(0)
   # cv2.destroyAllWindows()
-  create_racoon_dataset()
+  create_dataset()
 

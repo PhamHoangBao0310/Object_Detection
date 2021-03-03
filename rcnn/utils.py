@@ -49,3 +49,6 @@ def selective_search(image, method = "fast"):
 	    ss.switchToSelectiveSearchQuality()
     rects = ss.process()
     return rects
+
+def get_area(bounding_box):
+  return (bounding_box[2] - bounding_box[0]) * (bounding_box[3] - bounding_box[1])

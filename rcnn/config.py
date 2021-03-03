@@ -22,7 +22,7 @@ MAX_NEGATIVE = 5
 
 # Define input dims for model CNN
 INPUT_DIMS = (224, 224)
-MIN_PROBA = 0.99
+MIN_PROBA = 0.9
 
 
 

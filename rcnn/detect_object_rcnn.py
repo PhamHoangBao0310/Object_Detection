@@ -14,7 +14,7 @@ def full_flow(image_path):
 
   start = time.time()
   print("[INFO] Load model")
-  model = InferenceModel("E:\\FPTdocument\\Document\\Machine Learning\\AIVN\\object_detection\\Object_Detection\\rcnn\\my_model.h5", "MobileNet")
+  model = InferenceModel("E:\\FPTdocument\\Document\\Machine Learning\\AIVN\\object_detection\\Object_Detection\\rcnn\\my_model_3.h5", "MobileNet", 2)
   print("[INFO] Load model successfully : {}".format(time.time() - start))
 
   # Perform selective search
@@ -61,7 +61,7 @@ def full_flow(image_path):
 
   start = time.time()
   print("[INFO] Perform Non maximum supression")
-  bbxs , prob = non_max_supression(bbxs, prob, 0.5)
+  bbxs , prob = non_max_supression(bbxs, prob, 0.2)
   print("[INFO] Perform Non maximum supression sucessfully : {}".format(time.time() - start))
 
   start = time.time()
@@ -83,4 +83,5 @@ def full_flow(image_path):
 
 
 if __name__ == '__main__':
-  full_flow("E:\\FPTdocument\\Document\\Machine Learning\\AIVN\\object_detection\\Object_Detection\\data\\images\\raccoon-2.jpg")
+  full_flow("E:\\FPTdocument\\Document\\Machine Learning\\AIVN\\object_detection\\Object_Detection\\data\\images\\raccoon-4.jpg")
+

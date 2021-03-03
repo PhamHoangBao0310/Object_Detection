@@ -78,7 +78,7 @@ class InferenceModel(object):
 
   model = None
 
-  def __init__(self, model_dir, base):
+  def __init__(self, model_dir, base, num_class):
     # Data augmentation layer
     data_augmentation = tf.keras.Sequential([
       tf.keras.layers.experimental.preprocessing.RandomFlip('horizontal'),
@@ -100,7 +100,7 @@ class InferenceModel(object):
     global_average = tf.keras.layers.GlobalAveragePooling2D()
     # final layer
     dropout_layer = tf.keras.layers.Dropout(0.2)
-    prediction_layer = tf.keras.layers.Dense(2, activation="softmax")
+    prediction_layer = tf.keras.layers.Dense(num_class, activation="softmax")
 
     inputs = tf.keras.Input(shape=(224, 224, 3))
     x = data_augmentation(inputs)

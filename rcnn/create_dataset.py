@@ -67,7 +67,7 @@ def create_dataset():
 
   total_Positive = 0
   total_Negative = 0
-
+  print("a")
   for file_path in glob.glob(config.ORIGINAL_IMAGES_FOLDER + "\\*.jpg"):
     print(file_path)
     img_file_name = file_path.split("\\")[-1]
@@ -97,21 +97,21 @@ def create_dataset():
         #   print("{} has IOI > 0".format(proposed_Rect))
         (gtStartX, gtStartY, gtEndX, gtEndY) = gt_box
 
-        proposed_Rect_Area = get_area([propStartX, propStartY, propEndX, propEndY])
-        gt_box_Area = get_area([gtStartX, gtStartY, gtEndX, gtEndY])
+        # proposed_Rect_Area = get_area([propStartX, propStartY, propEndX, propEndY])
+        # gt_box_Area = get_area([gtStartX, gtStartY, gtEndX, gtEndY])
 
 
         roi = None
         output_path = None
 
         # If proposed image is like ground_truth and number of positive is not exceeds max positive number
-        if iou > 0.9 and positiveROIs <= config.MAX_POSITIVE:
+        if iou > 0.7 and positiveROIs <= config.MAX_POSITIVE:
           roi = image[propStartY:propEndY, propStartX:propEndX]
           filename = "{}.png".format(total_Positive)
           output_path = os.path.sep.join([config.POSITVE_PATH, filename])
 
-          if gt_box_Area / proposed_Rect_Area < 0.7 or proposed_Rect_Area / gt_box_Area < 0.7:
-            continue
+          # if gt_box_Area / proposed_Rect_Area < 0.7 or proposed_Rect_Area / gt_box_Area < 0.7:
+          #   continue
           # increment the positive counters
           positiveROIs += 1
           total_Positive += 1

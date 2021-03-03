@@ -131,3 +131,7 @@ dmypy.json
 # Folder contains dataset
 data/
 rcnn/dataset/
+
+# Model checkpoint
+*.h5
+.vscode

@@ -74,9 +74,60 @@ def model(base="MobileNet"):
 
   return model
 
+class InferenceModel(object):
+
+  model = None
+
+  def __init__(self, model_dir, base):
+    # Data augmentation layer
+    data_augmentation = tf.keras.Sequential([
+      tf.keras.layers.experimental.preprocessing.RandomFlip('horizontal'),
+      tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
+      tf.keras.layers.experimental.preprocessing.Rescaling(1./127.5, offset= -1)
+    ])
+
+    # Base model for transfer learning
+    base_model = None
+    if base == "MobileNet":
+      base_model = tf.keras.applications.MobileNetV2(input_shape=(224,224,3)
+                                                    , include_top=False
+                                                    , weights="imagenet" )
+    else:
+      base_model = tf.keras.applications.InceptionV3(input_shape=(224,224,3)
+                                                    , include_top=False
+                                                    , weights="imagenet" )
+    # Flattening
+    global_average = tf.keras.layers.GlobalAveragePooling2D()
+    # final layer
+    dropout_layer = tf.keras.layers.Dropout(0.2)
+    prediction_layer = tf.keras.layers.Dense(2, activation="softmax")
+
+    inputs = tf.keras.Input(shape=(224, 224, 3))
+    x = data_augmentation(inputs)
+    x = base_model(x)
+    x = global_average(x)
+    x = dropout_layer(x)
+    outputs = prediction_layer(x)
+    self.model = tf.keras.Model(inputs, outputs)
+
+    self.model.load_weights(model_dir)
+
+  def predict(self, image):
+    return self.model.predict(image)
 
 
 if __name__ == '__main__':
   # train_dataset, validation_dataset = get_data_set_from_directory("rcnn\dataset")
-  mymodel =  model()
-  print(mymodel.summary())
+  # mymodel =  model()
+  # print(mymodel.summary())
+
+  my_parser = argparse.ArgumentParser(description='')
+  my_parser.add_argument("-d", "--data_dir", type=str, default="",
+                        help="Folder contains your training dataset")
+  my_parser.add_argument("-m", "--model", type=str, default="MobileNet",
+                        help="The backbone of model. MobileNet of InceptionNet")
+  my_parser.add_argument("-ckpt", "--checkpoint", type=str, default="",
+                        help="Folder to save your model in .h5 type")
+
+  args = vars(my_parser.parse_args())
+  print(args)
